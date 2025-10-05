@@ -4,6 +4,9 @@ const nextConfig = {
 		// Skip ESLint during production builds (vercel and local `next build`)
 		ignoreDuringBuilds: true,
 	},
+    experimental: {
+    optimizeCss: false
+  }
 };
 
 export default nextConfig;
