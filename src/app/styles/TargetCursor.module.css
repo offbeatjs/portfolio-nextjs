@@ -1,0 +1,57 @@
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6ea6ff, #b58bff);
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 0 20px rgba(110, 166, 255, 0.6);
+}
+
+.cursorPointer {
+  transform: translate(-50%, -50%) scale(1.5);
+  background: linear-gradient(135deg, #ffd166, #ff7eb6);
+  box-shadow: 0 0 30px rgba(255, 126, 182, 0.8);
+}
+
+.cursorRing {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(110, 166, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, opacity 0.2s ease;
+  background: radial-gradient(circle, rgba(110, 166, 255, 0.1) 0%, transparent 70%);
+}
+
+.cursorRingPointer {
+  width: 48px;
+  height: 48px;
+  border-color: rgba(255, 126, 182, 0.5);
+  background: radial-gradient(circle, rgba(255, 126, 182, 0.15) 0%, transparent 70%);
+}
+
+/* Hide default cursor on desktop */
+@media (pointer: fine) {
+  body {
+    cursor: none !important;
+  }
+  
+  a, button, input, textarea, select, [role="button"] {
+    cursor: none !important;
+  }
+}
+
+/* Show default cursor on touch devices */
+@media (pointer: coarse) {
+  .cursor,
+  .cursorRing {
+    display: none;
+  }
+}

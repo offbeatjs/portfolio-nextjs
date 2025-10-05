@@ -1,0 +1,323 @@
+/* Optimized dark contact page styles (lightweight + hover gimmicks) */
+.contact_page {
+  min-height: 100vh;
+  padding: 64px 0 40px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  color: #eaf2ff;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+}
+
+.contact_header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page_title {
+  font-size: 2.4rem;
+  margin: 0;
+  font-weight: 700;
+  color: #eaf2ff;
+}
+
+.page_subtitle {
+  color: rgba(230, 240, 255, 0.88);
+  margin-top: 8px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact_content {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* Enhanced profile card - layered and aesthetic */
+.profile_card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 10px 40px rgba(3,8,18,0.72);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* soft glow layer behind card */
+.profile_card::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  z-index: -3;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(106,166,255,0.06), rgba(181,139,255,0.04));
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+/* decorative accent (discord widget image) */
+.profile_card::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  width: 140px;
+  height: 140px;
+  background-image: url('https://discord.c99.nl/widget/theme-3/848724317416325160.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.20; /* increased for clarity */
+  transform: none; /* keep image level for readability */
+  z-index: -2;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.profile_avatar { display: flex; justify-content: center; margin-bottom: 6px; position: relative; }
+
+.avatar_placeholder {
+  width: 84px;
+  height: 84px;
+  border-radius: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  background: linear-gradient(135deg,#7fb1ff,#c9a6ff);
+  color:#07102a;
+  font-size:28px;
+  box-shadow: 0 8px 28px rgba(100,120,255,0.18), 0 1px 0 rgba(255,255,255,0.02) inset;
+}
+
+/* small info badge that overlaps the avatar */
+.profile_badge {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  background: linear-gradient(90deg,#ffd166,#ff7eb6);
+  color: #07102a;
+  padding: 6px 8px;
+  font-weight:700;
+  font-size:12px;
+  border-radius:10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  transform: translateZ(0);
+}
+
+.profile_info { text-align:center; padding: 6px 8px; }
+.profile_name { font-size:1.15rem; font-weight:800; margin-bottom:4px; letter-spacing: -0.2px; }
+.profile_title { color: rgba(170,190,255,0.98); margin-bottom:6px; font-weight:600 }
+.profile_location { font-size:0.9rem; color: rgba(200,220,255,0.82); }
+
+/* stats row refined */
+.profile_stats { display:flex; justify-content:space-between; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.02); width:100%; }
+.stat_item { text-align:center; flex:1; }
+.stat_number { font-weight:800; font-size:1.05rem; color:#fff; }
+.stat_label { font-size:0.78rem; color: rgba(200,220,255,0.78); }
+
+/* action links styled */
+.social_links { display:flex; gap:8px; justify-content:center; margin-top:12px; width:100%; }
+.social_icon { padding:8px 12px; border-radius:10px; background: rgba(255,255,255,0.02); color: #eaf2ff; text-decoration:none; font-size:0.9rem; font-weight:700; border:1px solid rgba(255,255,255,0.03); transition: transform 160ms ease, box-shadow 160ms ease; }
+.social_icon:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(80,110,255,0.12); }
+
+/* Form */
+.form_card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(3, 8, 18, 0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+.form_title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.form_subtitle {
+  color: rgba(200, 220, 255, 0.85);
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.contact_form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form_row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form_group {
+  position: relative;
+}
+
+.form_label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  font-size: 12px;
+  color: rgba(200, 220, 255, 0.6);
+  pointer-events: none;
+  transition: all 160ms ease;
+  font-family: 'SF Mono', monospace;
+}
+
+.form_group.filled .form_label,
+.form_input:focus + .form_label,
+.form_textarea:focus + .form_label {
+  transform: translateY(-22px);
+  font-size: 11px;
+  opacity: 0.95;
+}
+
+.form_input,
+.form_textarea {
+  width: 100%;
+  padding: 16px 12px 14px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  color: #eaf2ff;
+  min-height: 44px;
+}
+
+.form_textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form_input:focus,
+.form_textarea:focus {
+  outline: none;
+  box-shadow: 0 6px 20px rgba(91, 140, 255, 0.08);
+  border-color: rgba(91, 140, 255, 0.45);
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.submit_btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  background: linear-gradient(90deg, #6ea6ff, #b58bff);
+  color: #07102a;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(107, 119, 255, 0.12);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.submit_btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px rgba(107, 119, 255, 0.16);
+}
+
+.submit_btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.form_error {
+  color: #ffb4b4;
+  font-weight: 600;
+}
+
+.form_success {
+  color: #9ff3d0;
+  font-weight: 600;
+}
+
+/* Hover grid gimmick (low-cost) */
+.form_card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.form_card:hover::after {
+  opacity: 0.9;
+  transform: translateY(-4px);
+}
+
+/* Cursor stripe following small gimmick */
+.container::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(120, 150, 255, 0.06), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.container:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .form_card::after,
+  .container::before {
+    transition: none;
+    opacity: 0;
+  }
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .contact_content {
+    grid-template-columns: 1fr;
+  }
+  
+  .form_row {
+    grid-template-columns: 1fr;
+  }
+  
+  .avatar_placeholder {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .profile_card { padding: 18px; }
+  .avatar_placeholder { width:64px; height:64px; font-size:20px; border-radius:10px; }
+  .profile_badge { right: -4px; bottom: -4px; padding:5px 6px; }
+}

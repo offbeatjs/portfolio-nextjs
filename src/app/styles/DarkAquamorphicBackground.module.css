@@ -1,0 +1,160 @@
+/* ===== DARK AQUAMORPHIC BACKGROUND (PERFORMANCE-FRIENDLY CANVAS) ===== */
+.dark_aqua_container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #05050a 0%, #081022 35%, #071225 100%);
+  overflow: hidden;
+}
+
+/* Canvas fills the screen and is fixed to avoid repaints */
+.tech_canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.content_wrapper {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+}
+
+/* Keep a small graceful fallback for older browsers */
+@supports not (canvas: auto) {
+  .dark_aqua_container {
+    background: linear-gradient(135deg, #05050a 0%, #0b1020 100%);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tech_canvas { opacity: 0.95; }
+}
+
+@media (max-width: 768px) {
+  .tech_canvas { opacity: 0.95; }
+}
+
+/* ===== DARK AQUAMORPHIC BACKGROUND (PERFORMANCE-FRIENDLY) ===== */
+.dark_aqua_container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0c0c0c 0%, #121226 25%, #0f1a33 50%, #0b0b16 75%, #000000 100%);
+  overflow: hidden;
+}
+
+/* Make background a fixed layer so scrolling doesn't repaint it */
+.aqua_background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translateZ(0);
+}
+
+.content_wrapper {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+}
+
+/* Use only transform/opacity in animations (GPU accelerated) */
+.wave_layer1,
+.wave_layer2 {
+  position: absolute;
+  top: 10%;
+  left: -50%;
+  width: 200%;
+  height: 70%;
+  border-radius: 50%;
+  opacity: 0.55;
+  will-change: transform, opacity;
+}
+
+.wave_layer1 {
+  background: radial-gradient(ellipse at center, rgba(59,130,246,0.14) 0%, rgba(147,51,234,0.07) 35%, transparent 100%);
+  transform-origin: center;
+  animation: waveMove 40s linear infinite;
+}
+
+.wave_layer2 {
+  background: radial-gradient(ellipse at center, rgba(99,102,241,0.1) 0%, rgba(6,182,212,0.06) 45%, transparent 100%);
+  transform-origin: center;
+  animation: waveMoveReverse 50s linear infinite;
+}
+
+/* Single blurred blob (less DOM, cheap blur via backdrop pseudo trick avoided) */
+.blob1 {
+  position: absolute;
+  right: 8%;
+  bottom: 10%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.26), rgba(168,85,247,0.14) 40%, transparent 70%);
+  filter: blur(28px);
+  opacity: 0.9;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
+  animation: blobDrift 30s ease-in-out infinite;
+}
+
+/* Single subtle bubble using transform only */
+.bubble {
+  position: absolute;
+  left: 10%;
+  bottom: 5%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.06), rgba(99,102,241,0.04));
+  opacity: 0.65;
+  transform: translateY(0) scale(0.9);
+  will-change: transform, opacity;
+  animation: bubbleRise 18s ease-in-out infinite;
+}
+
+/* Animations animate only transform/opacity */
+@keyframes waveMove {
+  0% { transform: translateX(-10%) translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateX(0%) translateY(-18px) scale(1.02); opacity: 0.55; }
+  100% { transform: translateX(-10%) translateY(0) scale(1); opacity: 0.6; }
+}
+
+@keyframes waveMoveReverse {
+  0% { transform: translateX(0%) translateY(0) scale(1); opacity: 0.45; }
+  50% { transform: translateX(-8%) translateY(12px) scale(0.98); opacity: 0.5; }
+  100% { transform: translateX(0%) translateY(0) scale(1); opacity: 0.45; }
+}
+
+@keyframes blobDrift {
+  0% { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
+  50% { transform: translate3d(-18px,-30px,0) scale(1.05); opacity: 0.88; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
+}
+
+@keyframes bubbleRise {
+  0% { transform: translateY(0) scale(0.9); opacity: 0.6; }
+  50% { transform: translateY(-80px) scale(1); opacity: 0.75; }
+  100% { transform: translateY(-160px) scale(1.1); opacity: 0; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .wave_layer1, .wave_layer2, .blob1, .bubble {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Smaller devices: reduce sizes and remove blur */
+@media (max-width: 768px) {
+  .blob1 { width: 180px; height: 180px; filter: blur(16px); right: 6%; bottom: 8%; }
+  .wave_layer1, .wave_layer2 { top: 8%; height: 60%; }
+}

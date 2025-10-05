@@ -1,104 +1,280 @@
-import Image from "next/image";
-import { Link } from "next/link";
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
+import DarkAquamorphicBackground from './components/DarkAquamorphicBackground';
+import AnonModal from './components/AnonModal';
+import Toast from './components/Toast';
+import { DottedSurface } from './components/ui/dotted-surface';
+import { IdentityCardBody, RevealCardContainer } from '@/app/components/ui/animated-profile-card';
+import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import toastStyles from './styles/Toast.module.css';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const skills = ['JavaScript', 'Next.js', 'Discord.js', 'Node.js', 'React', 'HTML/CSS', 'MERN', 'Git', 'Docker', 'REST APIs', 'TypeScript', 'Tailwind CSS'];
+  const [anonOpen, setAnonOpen] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const anonRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Profile data for the animated card
+  const profile = {
+    avatarUrl: "/cat.jpg",
+    avatarText: "Y",
+    fullName: "Yash",
+    place: "🇮🇳",
+    about: "Full-stack web developer. Specializing in creating mordern web interfaces, APIs and automation bots for Discord, Telegram.",
+    socials: [
+      {
+        id: "gh",
+        url: "https://github.com/offbeatjs",
+        label: "GitHub",
+        icon: <Github className="h-5 w-5" />,
+      },
+      {
+        id: "tw",
+        url: "https://x.com/not_yash_",
+        label: "Twitter",
+        icon: <Twitter className="h-5 w-5" />,
+      },
+      {
+        id: "li",
+        url: "https://linkedin.com/in/theyash07",
+        label: "LinkedIn",
+        icon: <Linkedin className="h-5 w-5" />,
+      },
+      {
+        id: "mail",
+        url: "mailto:contact@example.com",
+        label: "Email",
+        icon: <Mail className="h-5 w-5" />,
+      },
+    ],
+  };
+
+  // Draggable state and position for modal
+  const dragState = useRef({ dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 });
+  const [modalPos, setModalPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'Escape') setAnonOpen(false);
+    }
+    if (anonOpen) window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [anonOpen]);
+
+  function startDrag(e) {
+    const el = anonRef.current;
+    if (!el) return;
+    dragState.current.dragging = true;
+    const rect = el.getBoundingClientRect();
+    dragState.current.startX = e.clientX || (e.touches && e.touches[0].clientX);
+    dragState.current.startY = e.clientY || (e.touches && e.touches[0].clientY);
+    dragState.current.originX = rect.left;
+    dragState.current.originY = rect.top;
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', endDrag);
+    window.addEventListener('touchmove', onDrag, { passive: false });
+    window.addEventListener('touchend', endDrag);
+  }
+
+  function onDrag(e) {
+    if (!dragState.current.dragging) return;
+    e.preventDefault();
+    const cx = e.clientX || (e.touches && e.touches[0].clientX);
+    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    const dx = cx - dragState.current.startX;
+    const dy = cy - dragState.current.startY;
+    setModalPos({ x: dragState.current.originX + dx, y: dragState.current.originY + dy });
+  }
+
+  function endDrag() {
+    dragState.current.dragging = false;
+    window.removeEventListener('mousemove', onDrag);
+    window.removeEventListener('mouseup', endDrag);
+    window.removeEventListener('touchmove', onDrag);
+    window.removeEventListener('touchend', endDrag);
+  }
+
+  // Add blur overlay when modal open is handled inside AnonModal (keeps modal sharp)
+  function pushToast(message, opts = { type: 'info', duration: 3000 }) {
+    const id = Date.now() + Math.random().toString(36).slice(2, 9);
+    setToasts((s) => [...s, { id, message, ...opts }]);
+  }
+
+  function removeToast(id) {
+    setToasts((s) => s.filter((t) => t.id !== id));
+  }
+
+  return (
+    <DarkAquamorphicBackground>
+      <DottedSurface />
+
+      {/* Right-side floating translucent button */}
+      <button
+        onClick={() => setAnonOpen(true)}
+        aria-haspopup="dialog"
+        className="cursor-target"
+        style={{
+          position: 'fixed',
+          right: 18,
+          bottom: 28,
+          zIndex: 1200,
+          padding: '12px 14px',
+          borderRadius: 999,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+          color: '#eaf2ff',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 8px 30px rgba(2,6,20,0.6)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          cursor: 'pointer',
+          fontWeight: 700,
+        }}
+      >
+        Send me an anonymous message
+      </button>
+
+            <main
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '48px 24px',
+          gap: 48,
+          boxSizing: 'border-box',
+          flexWrap: 'wrap',
+        }}
+      >
+        {/* Hero / Intro */}
+        <section style={{ maxWidth: 720, flex: '1 1 520px' }}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 'clamp(28px, 4vw, 44px)',
+              lineHeight: 1.05,
+              color: '#eaf2ff',
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Hi. I'm Yash. I weave apps and dreams.
+          </h1>
+          <p
+            style={{
+              marginTop: 18,
+              color: 'rgba(230,240,255,0.9)',
+              maxWidth: 560,
+              fontSize: 16,
+            }}
           >
-            Read our docs
-          </a>
-        </div>
+            I design and implement performant, accessible interfaces with a focus
+            on clean UX and reliable code. Currently building with Next.js, Node,
+            and modern frontend tools.
+          </p>
+
+          <div
+            style={{
+              marginTop: 22,
+              display: 'flex',
+              gap: 12,
+              alignItems: 'center',
+            }}
+          >
+            <Link
+              href="/projects"
+              className="cursor-target"
+              style={{
+                display: 'inline-block',
+                padding: '10px 16px',
+                background: 'linear-gradient(90deg,#5b8cff,#8b5cf0)',
+                color: '#07102a',
+                borderRadius: 10,
+                textDecoration: 'none',
+                fontWeight: 600,
+              }}
+            >
+              View projects
+            </Link>
+
+            <Link
+              href="/contact"
+              className="cursor-target"
+              style={{
+                display: 'inline-block',
+                padding: '10px 14px',
+                borderRadius: 10,
+                border: '1px solid rgba(255,255,255,0.06)',
+                color: 'rgba(230,240,255,0.95)',
+                textDecoration: 'none',
+              }}
+            >
+              Get in touch
+            </Link>
+          </div>
+
+          <div
+            style={{
+              marginTop: 28,
+              display: 'flex',
+              gap: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            {skills.map((s) => (
+              <span
+                key={s}
+                style={{
+                  padding: '6px 10px',
+                  background: 'rgba(255,255,255,0.03)',
+                  color: 'rgba(200,220,255,0.92)',
+                  borderRadius: 8,
+                  fontSize: 13,
+                }}
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* Animated Profile Card - Right Side */}
+        <section style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <RevealCardContainer
+            accent="#5b8cff"
+            textOnAccent="#ffffff"
+            mutedOnAccent="rgba(255,255,255,0.8)"
+            base={
+              <IdentityCardBody {...profile} scheme="plain" displayAvatar={true} />
+            }
+            // overlay={
+            //   <IdentityCardBody
+            //     {...profile}
+            //     scheme="plain"
+            //     displayAvatar={true}
+            //     // cardCss={{ backgroundColor: "var(--accent-color)" }}
+            //   />
+            // }
+          />
+        </section>
+
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+      {/* Anonymous modal (uses shared overlay/blur style similar to HireMe) */}
+      <AnonModal
+        open={anonOpen}
+        onClose={() => setAnonOpen(false)}
+        onSuccess={(res) => {
+          if (res?.ok) pushToast(res.message, { type: 'info' });
+          else pushToast(res?.message || 'Failed to send message', { type: 'error' });
+        }}
+      />
+
+      {/* Toast container */}
+      <div className={toastStyles.container} aria-live="polite" aria-atomic="true">
+        {toasts.map((t) => (
+          <Toast key={t.id} id={t.id} message={t.message} type={t.type} duration={t.duration} onClose={removeToast} />
+        ))}
+      </div>
+    </DarkAquamorphicBackground>
   );
 }

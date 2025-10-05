@@ -1,0 +1,40 @@
+{
+  "customProjects": [
+    {
+      "id": "custom-1",
+      "title": "Portfolio Website",
+      "description": "A modern portfolio website with dark aquamorphic design, built with Next.js and featuring advanced CSS animations and responsive design.",
+      "tech": ["Next.js", "CSS Modules", "React", "JavaScript"],
+      "image": "💼",
+      "color": "from-purple-500 to-pink-600",
+      "github": "https://github.com/yourusername/portfolio",
+      "demo": "https://yourportfolio.com",
+      "featured": true,
+      "category": "Web Development"
+    },
+    {
+      "id": "custom-2", 
+      "title": "Custom Design System",
+      "description": "A comprehensive design system with reusable components, dark theme support, and accessibility features for modern web applications.",
+      "tech": ["React", "Storybook", "CSS-in-JS", "TypeScript"],
+      "image": "🎨",
+      "color": "from-blue-500 to-cyan-600",
+      "github": "#",
+      "demo": "#",
+      "featured": true,
+      "category": "UI/UX"
+    },
+    {
+      "id": "custom-3",
+      "title": "AI-Powered Chat Bot",
+      "description": "An intelligent chatbot with natural language processing capabilities, built for customer service automation and user engagement.",
+      "tech": ["Python", "TensorFlow", "FastAPI", "React"],
+      "image": "🤖",
+      "color": "from-green-500 to-emerald-600",
+      "github": "#",
+      "demo": "#",
+      "featured": false,
+      "category": "AI/ML"
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "./components/ThemeProvider";
+import HireMeLauncher from "./components/HireMeLauncher";
+import HireMePortal from "./components/HireMePortal";
+import { GlobalNav } from "./components/GlobalNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,17 +16,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Yash",
-  description: "Portfolio - TheYash",
+  title: "TheYash - Portfolio",
+  description: " Services starting at $9 !",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <GlobalNav />
+          <HireMeLauncher />
+          <HireMePortal />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

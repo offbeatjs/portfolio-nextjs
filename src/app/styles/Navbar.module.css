@@ -1,0 +1,171 @@
+/* Classic cool navbar redesign */
+:root{
+  --nav-bg: rgba(6,10,20,0.6);
+  --nav-accent: #6ea6ff;
+  --nav-accent-2: #b58bff;
+  --nav-text: #eaf2ff;
+  --nav-muted: rgba(230,240,255,0.7);
+}
+
+.navbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 20px rgba(4,8,20,0.45);
+  transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+
+/* Logo (left) */
+.navbar > a{
+  color: var(--nav-accent);
+  font-weight:700;
+  font-size:1.05rem;
+  letter-spacing:0.6px;
+  text-decoration:none;
+  padding:6px 8px;
+  border-radius:6px;
+  transition: color 180ms ease, transform 180ms ease;
+  font-family: 'Segoe UI', 'Georgia', serif;
+}
+
+.navbar > a:hover{ color: var(--nav-accent-2); transform: translateY(-2px); }
+
+/* nav list */
+.nav__list{
+  list-style:none;
+  display:flex;
+  gap:18px;
+  align-items:center;
+  margin:0;
+  padding:0;
+}
+
+.nav__list li{ position:relative }
+
+.nav__list a{
+  color: var(--nav-muted);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:8px;
+  font-size:0.95rem;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+/* subtle sliding underline */
+.nav__list a::after{
+  content:'';
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:6px;
+  height:2px;
+  background: linear-gradient(90deg,var(--nav-accent),var(--nav-accent-2));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1);
+  border-radius:2px;
+  opacity:0.95;
+}
+
+.nav__list a:hover{ color: var(--nav-text); transform: translateY(-2px); }
+.nav__list a:hover::after{ transform: scaleX(1); }
+
+/* active style — a thin pill behind the active item */
+.nav__list a.active{
+  color: var(--nav-text);
+}
+
+/* Hire button: compact pill */
+#hire_button{
+  padding:8px 14px;
+  border-radius:999px;
+  background: linear-gradient(90deg,var(--nav-accent),var(--nav-accent-2));
+  color: #07102a;
+  border: none;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 8px 26px rgba(110,166,255,0.12);
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+#hire_button:hover{ transform: translateY(-3px); box-shadow: 0 18px 40px rgba(110,166,255,0.14); }
+#hire_button:active{ transform: translateY(0); }
+
+/* compact layout on smaller screens */
+@media (max-width: 768px){
+  .navbar{ height:52px; padding:0 14px }
+  .nav__list{ gap:12px }
+  .nav__list a{ padding:6px 8px; font-size:0.9rem }
+  #hire_button{ padding:7px 10px; font-size:0.9rem }
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .navbar, .nav__list a, #hire_button{ transition: none !important }
+  .nav__list a::after{ transition: none !important }
+}
+
+/* page transition overlay styles */
+.page-transition-overlay, .pageTransitionOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background: rgba(6, 8, 16, 0.16);
+  opacity: 0;
+  transition: opacity 260ms ease, backdrop-filter 260ms ease, transform 260ms ease;
+}
+
+.page-transition-overlay.pt-enter {
+  opacity: 1;
+  backdrop-filter: blur(8px);
+}
+
+.page-transition-overlay.pt-exit {
+  opacity: 0;
+  backdrop-filter: blur(2px);
+  transition: opacity 320ms ease, backdrop-filter 320ms ease;
+}
+
+/* Global overlay styles for page transition (use :global so injected element matches) */
+:global(.page-transition-overlay) {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  background: rgba(6, 8, 16, 0.16);
+  opacity: 0;
+  transition: opacity 260ms ease, backdrop-filter 260ms ease, transform 260ms ease;
+}
+
+:global(.page-transition-overlay.pt-enter) {
+  opacity: 1;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+:global(.page-transition-overlay.pt-exit) {
+  opacity: 0;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  transition: opacity 320ms ease, backdrop-filter 320ms ease;
+}
+
+:global(.site-blur) { filter: blur(6px) grayscale(0.03); transition: filter 260ms ease; }
+
+:global(.site-blur) * { /* ensure children don't remove blur with z-index tricks */
+  will-change: filter;
+}

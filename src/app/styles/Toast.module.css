@@ -1,0 +1,14 @@
+.toast { 
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #07102a;
+  font-weight: 700;
+  box-shadow: 0 8px 30px rgba(2,6,20,0.45);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 10px;
+  min-width: 220px;
+}
+.info { background: linear-gradient(90deg,#6ea6ff,#b58bff); }
+.error { background: linear-gradient(90deg,#ff9b9b,#ff7bca); color: #fff; }
+
+.container { position: fixed; right: 18px; bottom: 28px; z-index: 1400; display: flex; flex-direction: column; align-items: flex-end; }
