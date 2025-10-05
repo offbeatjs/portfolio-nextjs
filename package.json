@@ -9,9 +9,6 @@
     "lint": "next lint",
     "postinstall": "npm rebuild lightningcss || true"
   },
-  "engines": {
-    "node": ">=18.18.0"
-  },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-avatar": "^1.1.10",
