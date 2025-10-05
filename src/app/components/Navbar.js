@@ -73,11 +73,11 @@ const Navbar = () => {
   return (
     <>
     <div className={navs.navbar}>
-        <a href="/" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/'); }}>{'TheYash'}</a>
+  <Link href="/" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/'); }}>{'TheYash'}</Link>
     <ul className={navs.nav__list}>
-        <li><a href="/#about" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/#about'); }}>About</a></li>
-        <li><a href="/projects" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/projects'); }}>Projects</a></li>
-        <li><a href="/contact" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/contact'); }}>Contact</a></li>
+  <li><Link href="/#about" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/#about'); }}>About</Link></li>
+  <li><Link href="/projects" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/projects'); }}>Projects</Link></li>
+  <li><Link href="/contact" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/contact'); }}>Contact</Link></li>
         </ul>
         <button id={navs.hire_button} className="cursor-target" onClick={openHireMe}>Hire me</button>
         </div>

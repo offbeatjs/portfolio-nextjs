@@ -157,7 +157,7 @@ export default function Home() {
               color: '#eaf2ff',
             }}
           >
-            Hi. I'm Yash. I weave apps and dreams.
+            Hi. I&apos;m Yash. I weave apps and dreams.
           </h1>
           <p
             style={{

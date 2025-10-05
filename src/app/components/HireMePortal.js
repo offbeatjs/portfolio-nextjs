@@ -51,7 +51,7 @@ export default function HireMePortal() {
       <div
         style={{ marginTop: "16px", fontSize: "12px", color: "#6a9955", fontFamily: "monospace" }}
       >
-        <span className="codeComment">// I'll get back to you within 24 hours</span>
+        <span className="codeComment">{`// Ill get back to you within 24 hours`}</span>
       </div>
     </HireMe>
   );

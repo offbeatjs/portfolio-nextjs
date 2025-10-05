@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Link from 'next/link';
 import DarkAquamorphicBackground from '../components/DarkAquamorphicBackground';
 import styles from './contact.module.css';
+import Image from 'next/image';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -69,7 +71,7 @@ export default function Contact() {
             <aside className={styles.profile_card} aria-labelledby="profile-name">
               <div className={styles.profile_avatar} aria-hidden>
                 {/* <div className={styles.avatar_placeholder}>O</div> */}
-                <img src="/cat.jpg" width="100" height="100" alt="Offbeat (Yash)" className={styles.avatar_image} />
+                <Image src="/cat.jpg" width="100" height="100" alt="Offbeat (Yash)" className={styles.avatar_image} />
                 <span className={styles.online_indicator} aria-hidden></span>
               </div>
 
@@ -85,15 +87,19 @@ export default function Contact() {
                 </div>
 
                 <nav className={styles.social_links} aria-label="Social links">
-                  <a href="https://github.com/programmer-offbeat" target="_blank" rel="noreferrer" className={`${styles.social_icon} cursor-target`}>GitHub</a>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className={`${styles.social_icon} cursor-target`}>LinkedIn</a>
+                  <Link href="https://github.com/programmer-offbeat" target="_blank" rel="noreferrer" className={`${styles.social_icon} cursor-target`}>
+                    GitHub
+                  </Link>
+                  <Link href="https://linkedin.com" target="_blank" rel="noreferrer" className={`${styles.social_icon} cursor-target`}>
+                    LinkedIn
+                  </Link>
                 </nav>
               </div>
             </aside>
             {/* Contact Form */}
             <section className={styles.form_card} aria-labelledby="form-title">
               <h3 id="form-title" className={styles.form_title}>Send a message</h3>
-              <p className={styles.form_subtitle}>Tell me about your project — timelines, budget, and what you'd like to achieve.</p>
+              <p className={styles.form_subtitle}>Tell me about your project — timelines, budget, and what you&apos;d like to achieve.</p>
 
               <form className={styles.contact_form} onSubmit={handleSubmit} noValidate>
                 {/* honeypot field */}
