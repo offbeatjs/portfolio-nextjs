@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "npm rebuild lightningcss || true"
+  },
+  "engines": {
+    "node": ">=18.18.0"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
