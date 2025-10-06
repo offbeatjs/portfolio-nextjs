@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import navs from "../styles/Navbar.module.css";
 // HireMe modal is now mounted globally via HireMePortal. We dispatch an event to open it.
 import Link from 'next/link';
@@ -9,6 +9,12 @@ import { useRouter, usePathname } from 'next/navigation';
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    // close menu on navigation
+    setOpen(false);
+  }, [pathname]);
 
   function openHireMe() {
     try {
@@ -72,16 +78,27 @@ const Navbar = () => {
 
   return (
     <>
-    <div className={navs.navbar}>
-  <Link href="/" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/'); }}>{'TheYash'}</Link>
-    <ul className={navs.nav__list}>
-  <li><Link href="/#about" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/#about'); }}>About</Link></li>
-  <li><Link href="/projects" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/projects'); }}>Projects</Link></li>
-  <li><Link href="/contact" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/contact'); }}>Contact</Link></li>
+      <div className={navs.navbar}>
+        <Link href="/" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/'); }}>{'TheYash'}</Link>
+
+        <button
+          className={navs.mobile_toggle}
+          aria-expanded={open}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          onClick={() => setOpen((s) => !s)}
+        >
+          <span className={navs.hamburger} aria-hidden></span>
+        </button>
+
+        <ul className={`${navs.nav__list} ${open ? navs.open : ''}`}>
+          <li><Link href="/#about" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/#about'); }}>About</Link></li>
+          <li><Link href="/projects" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/projects'); }}>Projects</Link></li>
+          <li><Link href="/contact" className="cursor-target" onClick={(e) => { e.preventDefault(); navigateWithTransition('/contact'); }}>Contact</Link></li>
         </ul>
+
         <button id={navs.hire_button} className="cursor-target" onClick={openHireMe}>Hire me</button>
-        </div>
-        {/* HireMe modal is rendered globally by HireMePortal */}
+      </div>
+      {/* HireMe modal is rendered globally by HireMePortal */}
     </>
   )
 }
