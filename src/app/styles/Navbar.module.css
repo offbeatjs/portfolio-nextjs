@@ -49,6 +49,40 @@
   padding:0;
 }
 
+/* Mobile menu: hidden by default, toggled with .open */
+.mobile_toggle{
+  display:none;
+  appearance:none;
+  border:0;
+  background:transparent;
+  width:44px;
+  height:44px;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.hamburger{
+  display:block;
+  width:20px;
+  height:2px;
+  background:var(--nav-text);
+  position:relative;
+}
+.hamburger::before, .hamburger::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  height:2px;
+  background:var(--nav-text);
+  transition: transform 180ms ease, opacity 160ms ease;
+}
+.hamburger::before{ top:-6px }
+.hamburger::after{ top:6px }
+
 .nav__list li{ position:relative }
 
 .nav__list a{
@@ -106,7 +140,25 @@
   .nav__list{ gap:12px }
   .nav__list a{ padding:6px 8px; font-size:0.9rem }
   #hire_button{ padding:7px 10px; font-size:0.9rem }
+
+  /* show toggle, hide inline list */
+  .mobile_toggle{ display:flex }
+  .nav__list{ display:none; position:absolute; top:56px; right:14px; background:var(--nav-bg); padding:12px; border-radius:10px; box-shadow: 0 12px 40px rgba(2,6,18,0.6); min-width:180px; flex-direction:column; align-items:stretch }
+  .nav__list.open{ display:flex }
+  .nav__list a{ padding:10px 12px; border-radius:8px }
+  .nav__list a::after{ display:none }
+
+  /* improved hit target for list items */
+  .nav__list li{ width:100% }
 }
+
+/* animate hamburger to X when open (uses .open applied to list near it) */
+.nav__list.open + #hire_button + .mobile_toggle .hamburger,
+.mobile_toggle[aria-expanded='true'] .hamburger{
+  background:transparent;
+}
+.mobile_toggle[aria-expanded='true'] .hamburger::before{ transform: translateY(6px) rotate(45deg) }
+.mobile_toggle[aria-expanded='true'] .hamburger::after{ transform: translateY(-6px) rotate(-45deg) }
 
 /* reduce motion */
 @media (prefers-reduced-motion: reduce){
