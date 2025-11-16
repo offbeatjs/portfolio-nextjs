@@ -7,14 +7,28 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
-    const webhook = process.env.DISCORD_WEBHOOK_URL;
+    const webhook = process.env.DISCORD_ANON_WEBHOOK_URL;
     if (!webhook) {
-      // For safety in local dev, return success but log message
-      console.warn('Anonymous message received (webhook not configured):', message);
-      return NextResponse.json({ ok: true, note: 'webhook not configured' });
+      console.error('Discord anonymous webhook URL not configured');
+      return NextResponse.json({ 
+        error: 'Service configuration error. Please try again later.' 
+      }, { status: 500 });
     }
 
-    const payload = { content: `Anonymous message:\n${message}` };
+    // Create Discord embed
+    const embed = {
+      title: '📩 New Anonymous Message',
+      description: message.length > 4096 ? message.substring(0, 4093) + '...' : message,
+      color: 0x8b5cf0, // Purple color
+      timestamp: new Date().toISOString(),
+      footer: {
+        text: 'Portfolio Anonymous Message',
+      },
+    };
+
+    const payload = {
+      embeds: [embed],
+    };
 
     const r = await fetch(webhook, {
       method: 'POST',
@@ -28,7 +42,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Failed to send message' }, { status: 502 });
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, message: 'Anonymous message sent — thank you!' });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

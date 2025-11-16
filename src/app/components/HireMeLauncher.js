@@ -16,7 +16,7 @@ export default function HireMeLauncher({ className }) {
       aria-haspopup="dialog"
       onClick={openHireMe}
       className={cn(
-        "group fixed top-6 right-6 z-[1200] rounded-2xl border backdrop-blur-xl cursor-target",
+        "group fixed top-6 right-2 md:right-6 z-[1200] rounded-2xl border backdrop-blur-xl cursor-target",
         "transition-all duration-300",
         className
       )}
