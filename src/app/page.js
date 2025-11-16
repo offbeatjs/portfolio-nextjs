@@ -15,6 +15,43 @@ export default function Home() {
   const [anonOpen, setAnonOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const anonRef = useRef(null);
+  const [typedText, setTypedText] = useState('');
+  const [showHi, setShowHi] = useState(false);
+  const [showYash, setShowYash] = useState(false);
+  const [showAnonSuccess, setShowAnonSuccess] = useState(false);
+  const [showAnonError, setShowAnonError] = useState(false);
+  const [anonErrorMessage, setAnonErrorMessage] = useState('');
+
+  useEffect(() => {
+    // Show "Hi." with fade-in
+    const hiTimer = setTimeout(() => setShowHi(true), 200);
+    
+    // Show "I'm Yash" with fade-in
+    const yashTimer = setTimeout(() => setShowYash(true), 800);
+    
+    // Start typing effect for the rest
+    let typeInterval;
+    const restTimer = setTimeout(() => {
+      const text = ' I weave apps and dreams.';
+      let index = 0;
+      
+      typeInterval = setInterval(() => {
+        if (index < text.length) {
+          setTypedText(text.slice(0, index + 1));
+          index++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 40); // 40ms per character for smooth, fast typing
+    }, 1400);
+    
+    return () => {
+      clearTimeout(hiTimer);
+      clearTimeout(yashTimer);
+      clearTimeout(restTimer);
+      if (typeInterval) clearInterval(typeInterval);
+    };
+  }, []);
 
   // Profile data for the animated card
   const profile = {
@@ -44,7 +81,7 @@ export default function Home() {
       },
       {
         id: "mail",
-        url: "mailto:contact@example.com",
+        url: "mailto:the.yashh@icloud.com",
         label: "Email",
         icon: <Mail className="h-5 w-5" />,
       },
@@ -141,11 +178,12 @@ export default function Home() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '48px 24px',
+          padding: '100px 24px 48px',
           gap: 48,
           boxSizing: 'border-box',
           flexWrap: 'wrap',
         }}
+        className="md:!pt-12"
       >
         {/* Hero / Intro */}
         <section style={{ maxWidth: 720, flex: '1 1 520px' }}>
@@ -157,7 +195,28 @@ export default function Home() {
               color: '#eaf2ff',
             }}
           >
-            Hi. I&apos;m Yash. I weave apps and dreams.
+            <span 
+              style={{
+                opacity: showHi ? 1 : 0,
+                filter: showHi ? 'blur(0px)' : 'blur(10px)',
+                transition: 'opacity 0.6s ease-out, filter 0.6s ease-out',
+                display: 'inline-block',
+              }}
+            >
+              Hi.
+            </span>
+            {' '}
+            <span 
+              style={{
+                opacity: showYash ? 1 : 0,
+                filter: showYash ? 'blur(0px)' : 'blur(10px)',
+                transition: 'opacity 0.6s ease-out, filter 0.6s ease-out',
+                display: 'inline-block',
+              }}
+            >
+              I&apos;m Yash.
+            </span>
+            {typedText}
           </h1>
           <p
             style={{
@@ -264,10 +323,121 @@ export default function Home() {
         open={anonOpen}
         onClose={() => setAnonOpen(false)}
         onSuccess={(res) => {
-          if (res?.ok) pushToast(res.message, { type: 'info' });
-          else pushToast(res?.message || 'Failed to send message', { type: 'error' });
+          if (res?.ok) {
+            setShowAnonSuccess(true);
+            setTimeout(() => setShowAnonSuccess(false), 5000);
+          } else {
+            setAnonErrorMessage(res?.message || 'Failed to send message');
+            setShowAnonError(true);
+            setTimeout(() => setShowAnonError(false), 5000);
+          }
         }}
       />
+
+      {/* Anonymous Message Success Notification */}
+      {showAnonSuccess && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            zIndex: 10000,
+            background: "rgba(30, 35, 50, 0.95)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            minWidth: "320px",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+            animation: "slideIn 0.3s ease-out",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #5b8cff, #8b5cf0)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+                flexShrink: 0,
+              }}
+            >
+              ✓
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, color: "#eaf2ff", marginBottom: "4px" }}>
+                Message Sent!
+              </div>
+              <div style={{ fontSize: "13px", color: "rgba(230,240,255,0.8)", lineHeight: 1.4 }}>
+                Your anonymous message has been delivered.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Anonymous Message Error Notification */}
+      {showAnonError && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            zIndex: 10000,
+            background: "rgba(30, 35, 50, 0.95)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,100,100,0.3)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            minWidth: "320px",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+            animation: "slideIn 0.3s ease-out",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #ff5b5b, #ff8b8b)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+                flexShrink: 0,
+              }}
+            >
+              ✕
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, color: "#eaf2ff", marginBottom: "4px" }}>
+                Failed to Send
+              </div>
+              <div style={{ fontSize: "13px", color: "rgba(230,240,255,0.8)", lineHeight: 1.4 }}>
+                {anonErrorMessage}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes slideIn {
+          from {
+            transform: translateX(400px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
 
       {/* Toast container */}
       <div className={toastStyles.container} aria-live="polite" aria-atomic="true">

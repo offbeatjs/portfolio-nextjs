@@ -22,7 +22,7 @@ export function TubelightNavbar({ items, className }) {
   return (
     <div
       className={cn(
-        "fixed top-8 left-1/2 -translate-x-1/2 z-[9998]",
+        "fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[9998]",
         className,
       )}
     >
