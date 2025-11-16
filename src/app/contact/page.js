@@ -43,13 +43,30 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      // simulate network request
-      await new Promise((res) => setTimeout(res, 1200));
-      setSubmitted(true);
-      // keep success message for a short time
-      setTimeout(() => setSubmitted(false), 3500);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      const body = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        website: honeypotRef.current ? honeypotRef.current.value : '',
+      };
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json?.error || 'Failed to send message');
+      } else {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 3500);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      }
     } catch (err) {
+      console.error('contact submit error', err);
       setError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
