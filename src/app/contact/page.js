@@ -31,6 +31,99 @@ const BUDGETS  = ['Under $500', '$500 – $1k', '$1k – $5k', '$5k – $10k', '
 const DEADLINES = ['ASAP', '2 – 4 weeks', '1 – 2 months', '2 – 3 months', 'No rush'];
 const SLOTS    = ['Morning (9am – 12pm)', 'Afternoon (12pm – 5pm)', 'Evening (5pm – 8pm)', 'Flexible'];
 
+function TzSelect({ value, onChange, options, isDark, c }) {
+  const [open,   setOpen]   = useState(false);
+  const [query,  setQuery]  = useState('');
+  const wrapRef  = useRef(null);
+  const inputRef = useRef(null);
+
+  const filtered = query.trim()
+    ? options.filter(tz => tz.toLowerCase().replace(/_/g, ' ').includes(query.toLowerCase()))
+    : options;
+
+  // Close on outside click
+  useEffect(() => {
+    const fn = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, []);
+
+  const select = tz => {
+    onChange(tz);
+    setQuery('');
+    setOpen(false);
+  };
+
+  const displayValue = open ? query : (value ? value.replace(/_/g, ' ') : '');
+
+  return (
+    <div ref={wrapRef} style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }}>
+        <input
+          ref={inputRef}
+          value={displayValue}
+          placeholder={value ? value.replace(/_/g, ' ') : 'Search timezone…'}
+          onChange={e => { setQuery(e.target.value); setOpen(true); }}
+          onFocus={() => { setOpen(true); setQuery(''); }}
+          style={{
+            width: '100%', boxSizing: 'border-box',
+            padding: '11px 36px 11px 14px',
+            background: c.inputBg,
+            border: `1px solid ${open ? (isDark ? 'rgba(91,140,255,0.5)' : 'rgba(30,58,95,0.4)') : c.inputBorder}`,
+            borderRadius: open ? '10px 10px 0 0' : 10,
+            boxShadow: open ? (isDark ? '0 0 0 3px rgba(91,140,255,0.08)' : '0 0 0 3px rgba(30,58,95,0.06)') : 'none',
+            color: c.inputText,
+            fontSize: 14,
+            fontFamily: "'Satoshi', sans-serif",
+            outline: 'none',
+            transition: 'border-color 0.15s, box-shadow 0.15s, border-radius 0.1s',
+          }}
+        />
+        <span style={{
+          position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${open ? 180 : 0}deg)`,
+          color: c.muted, fontSize: 10, pointerEvents: 'none', transition: 'transform 0.2s',
+        }}>▼</span>
+      </div>
+
+      {open && filtered.length > 0 && (
+        <div style={{
+          position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50,
+          background: isDark ? '#0d1829' : '#fff',
+          border: `1px solid ${isDark ? 'rgba(91,140,255,0.4)' : 'rgba(30,58,95,0.3)'}`,
+          borderTop: 'none',
+          borderRadius: '0 0 10px 10px',
+          maxHeight: 220,
+          overflowY: 'auto',
+          boxShadow: isDark ? '0 16px 40px rgba(0,0,0,0.5)' : '0 16px 40px rgba(0,0,0,0.12)',
+        }}>
+          {filtered.map(tz => (
+            <div
+              key={tz}
+              onMouseDown={() => select(tz)}
+              style={{
+                padding: '9px 14px',
+                fontSize: 13,
+                fontFamily: "'Satoshi', sans-serif",
+                cursor: 'pointer',
+                color: tz === value ? (isDark ? '#a8c4ff' : '#1e3a5f') : c.inputText,
+                background: tz === value
+                  ? (isDark ? 'rgba(91,140,255,0.12)' : 'rgba(30,58,95,0.06)')
+                  : 'transparent',
+                borderLeft: tz === value ? `2px solid ${isDark ? 'rgba(91,140,255,0.6)' : 'rgba(30,58,95,0.5)'}` : '2px solid transparent',
+                transition: 'background 0.1s',
+              }}
+              onMouseEnter={e => { if (tz !== value) e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)'; }}
+              onMouseLeave={e => { if (tz !== value) e.currentTarget.style.background = 'transparent'; }}
+            >
+              {tz.replace(/_/g, ' ')}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Contact() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -48,8 +141,31 @@ export default function Contact() {
   const [form, setForm] = useState({
     name: '', email: '',
     idea: '', budget: '', deadline: '',
-    availability: '',
+    availability: '', timezone: '',
   });
+
+  const [tzOptions, setTzOptions] = useState([]);
+
+  // Auto-detect timezone and build options list on mount
+  useEffect(() => {
+    try {
+      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Use full IANA list if available, else static fallback
+      const all = typeof Intl.supportedValuesOf === 'function'
+        ? Intl.supportedValuesOf('timeZone')
+        : [
+            'Pacific/Honolulu','America/Anchorage','America/Los_Angeles','America/Denver',
+            'America/Chicago','America/New_York','America/Sao_Paulo','UTC',
+            'Europe/London','Europe/Paris','Europe/Helsinki','Europe/Moscow',
+            'Asia/Dubai','Asia/Karachi','Asia/Kolkata','Asia/Dhaka','Asia/Bangkok',
+            'Asia/Singapore','Asia/Tokyo','Australia/Sydney','Pacific/Auckland',
+          ];
+      // Ensure detected tz is in the list
+      const list = detected && !all.includes(detected) ? [detected, ...all] : all;
+      setTzOptions(list);
+      if (detected) set('timezone', detected);
+    } catch {}
+  }, []);
 
   const c = {
     bg:            isDark ? '#07101f'                : '#f5f4f0',
@@ -136,7 +252,7 @@ export default function Contact() {
           name:    form.name,
           email:   form.email,
           subject: 'Discovery Call Request',
-          message: `Project: ${form.idea}\nBudget: ${form.budget || 'Not specified'}\nDeadline: ${form.deadline || 'Not specified'}\nAvailability: ${form.availability}`,
+          message: `Project: ${form.idea}\nBudget: ${form.budget || 'Not specified'}\nDeadline: ${form.deadline || 'Not specified'}\nAvailability: ${form.availability}\nTimezone: ${form.timezone || 'Not specified'}`,
           website: honeypotRef.current?.value || '',
         }),
       });
@@ -144,7 +260,7 @@ export default function Contact() {
       if (!res.ok) setError(json?.error || 'Failed to send.');
       else {
         setSubmitted(true);
-        setForm({ name: '', email: '', idea: '', budget: '', deadline: '', availability: '' });
+        setForm({ name: '', email: '', idea: '', budget: '', deadline: '', availability: '', timezone: '' });
       }
     } catch {
       setError('Something went wrong. Please try again.');
@@ -333,6 +449,19 @@ export default function Contact() {
                           <Chip key={s} value={s} selected={form.availability === s} onClick={() => set('availability', s)} />
                         ))}
                       </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: 11, color: c.label, marginBottom: 6, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                        Your timezone
+                      </label>
+                      <TzSelect
+                        value={form.timezone}
+                        onChange={tz => set('timezone', tz)}
+                        options={tzOptions}
+                        isDark={isDark}
+                        c={c}
+                      />
                     </div>
 
                     {error && <p style={{ margin: 0, fontSize: 13, color: '#f87171', fontWeight: 500 }}>{error}</p>}
