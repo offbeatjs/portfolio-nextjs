@@ -293,6 +293,53 @@
   transform: translateY(0);
 }
 
+/* ── Light mode ──────────────────────────────── */
+.contact_page[data-theme="light"] {
+  color: #0f172a;
+}
+.contact_page[data-theme="light"] .page_title  { color: #0f172a; }
+.contact_page[data-theme="light"] .page_subtitle { color: rgba(15,23,42,0.65); }
+
+.contact_page[data-theme="light"] .profile_card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.07);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.contact_page[data-theme="light"] .profile_card::before {
+  background: linear-gradient(135deg, rgba(91,140,255,0.06), rgba(139,92,246,0.04));
+}
+.contact_page[data-theme="light"] .profile_name  { color: #0f172a; }
+.contact_page[data-theme="light"] .profile_title { color: rgba(15,23,42,0.6); }
+.contact_page[data-theme="light"] .profile_location { color: rgba(15,23,42,0.5); }
+.contact_page[data-theme="light"] .profile_stats { border-top-color: rgba(0,0,0,0.06); }
+.contact_page[data-theme="light"] .stat_number  { color: #0f172a; }
+.contact_page[data-theme="light"] .stat_label   { color: rgba(15,23,42,0.5); }
+.contact_page[data-theme="light"] .social_icon  {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.07);
+  color: #0f172a;
+}
+
+.contact_page[data-theme="light"] .form_card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.07);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+.contact_page[data-theme="light"] .form_title   { color: #0f172a; }
+.contact_page[data-theme="light"] .form_subtitle { color: rgba(15,23,42,0.6); }
+.contact_page[data-theme="light"] .form_label   { color: rgba(15,23,42,0.5); }
+.contact_page[data-theme="light"] .form_input,
+.contact_page[data-theme="light"] .form_textarea {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.08);
+  color: #0f172a;
+}
+.contact_page[data-theme="light"] .form_input:focus,
+.contact_page[data-theme="light"] .form_textarea:focus {
+  border-color: rgba(30,58,95,0.5);
+  box-shadow: 0 0 0 3px rgba(30,58,95,0.08);
+}
+
 /* reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .form_card::after,

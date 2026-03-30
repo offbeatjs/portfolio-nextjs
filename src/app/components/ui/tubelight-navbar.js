@@ -3,110 +3,110 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div style={{ width: 30, height: 30 }} />;
+  const isDark = resolvedTheme === "dark";
+  return (
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label="Toggle theme"
+      className="cursor-target"
+      style={{
+        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+        border: "1px solid rgba(255,255,255,0.08)",
+        background: "transparent",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        cursor: "pointer", fontSize: 14, color: "rgba(200,220,255,0.5)",
+        transition: "color 0.15s, background 0.15s",
+      }}
+      onMouseEnter={e => { e.currentTarget.style.color = "rgba(200,220,255,0.9)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+      onMouseLeave={e => { e.currentTarget.style.color = "rgba(200,220,255,0.5)"; e.currentTarget.style.background = "transparent"; }}
+    >
+      {isDark ? "☀︎" : "☽"}
+    </button>
+  );
+}
 
 export function TubelightNavbar({ items, className }) {
   const [activeTab, setActiveTab] = useState(items[0].name);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    const path = window.location.pathname;
+    const match = items.find(i => i.url === path || i.url.startsWith(path + "#"));
+    if (match) setActiveTab(match.name);
+  }, [items]);
 
   return (
-    <div
-      className={cn(
-        "fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[9998]",
-        className,
-      )}
-    >
-      <div 
-        className="flex items-center gap-4 backdrop-blur-xl rounded-full shadow-2xl border"
+    <div className={cn("fixed top-5 left-1/2 -translate-x-1/2 z-[9998]", className)}>
+      <div
+        className="flex items-center backdrop-blur-xl rounded-2xl border"
         style={{
-          background: 'rgba(10, 15, 30, 0.7)',
-          borderColor: 'rgba(110, 166, 255, 0.15)',
-          padding: '12px 20px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(110, 166, 255, 0.1)',
+          background: "rgba(8, 12, 26, 0.75)",
+          borderColor: "rgba(255,255,255,0.08)",
+          padding: "6px 8px",
+          gap: 2,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04) inset",
         }}
       >
         {items.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.name;
-
           return (
             <Link
               key={item.name}
               href={item.url}
               onClick={() => setActiveTab(item.name)}
-              className={cn(
-                "relative cursor-pointer cursor-target font-bold rounded-full transition-all duration-300",
-                "flex items-center gap-3",
-                isActive 
-                  ? "text-white px-10 py-4 text-lg" 
-                  : "text-gray-400 hover:text-gray-200 px-8 py-3.5 text-base hover:bg-white/5",
-              )}
+              className="cursor-target"
               style={{
-                textShadow: isActive ? '0 0 20px rgba(110, 166, 255, 0.5)' : 'none',
+                position: "relative",
+                display: "flex", alignItems: "center", gap: 7,
+                padding: "7px 14px",
+                borderRadius: 10,
+                textDecoration: "none",
+                fontSize: 13,
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "#fff" : "rgba(200,220,255,0.45)",
+                transition: "color 0.15s",
+                whiteSpace: "nowrap",
               }}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = "rgba(200,220,255,0.8)"; }}
+              onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = "rgba(200,220,255,0.45)"; }}
             >
-              <Icon size={isActive ? 22 : 20} strokeWidth={2.5} className={isActive ? "text-blue-300" : ""} />
-              <span className={isActive ? "block" : "hidden md:block"}>{item.name}</span>
-              
+              <Icon size={15} strokeWidth={2} />
+              <span className="hidden sm:inline">{item.name}</span>
+
               {isActive && (
                 <motion.div
-                  layoutId="lamp"
-                  className="absolute inset-0 rounded-full -z-10"
+                  layoutId="pill"
+                  className="absolute inset-0 -z-10 rounded-[10px]"
                   initial={false}
-                  transition={{
-                    type: "spring",
-                    stiffness: 380,
-                    damping: 30,
-                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 35 }}
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15))',
-                    boxShadow: '0 0 50px rgba(255, 255, 255, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.2)',
+                    background: "rgba(255,255,255,0.1)",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.1) inset",
                   }}
                 >
-                  {/* Tubelight glow effect on top */}
-                  <div 
-                    className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-t-full"
-                    style={{
-                      width: '80%',
-                      height: '10px',
-                      background: 'linear-gradient(to bottom, #ffffff, transparent)',
-                      boxShadow: '0 -15px 60px rgba(255, 255, 255, 0.8), 0 -8px 35px rgba(255, 255, 255, 1)',
-                    }}
-                  >
-                    <div 
-                      className="absolute w-full h-20 -top-10 left-0 rounded-full blur-2xl"
-                      style={{
-                        background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.7) 0%, transparent 70%)',
-                      }}
-                    />
-                    <div 
-                      className="absolute w-full h-16 -top-8 left-1/2 -translate-x-1/2 rounded-full blur-xl"
-                      style={{
-                        background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.6) 0%, transparent 70%)',
-                      }}
-                    />
-                    <div 
-                      className="absolute w-3/4 h-12 -top-6 left-1/2 -translate-x-1/2 rounded-full blur-lg"
-                      style={{
-                        background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5) 0%, transparent 70%)',
-                      }}
-                    />
-                  </div>
+                  {/* single tubelight beam above */}
+                  <div style={{
+                    position: "absolute", top: -8, left: "50%", transform: "translateX(-50%)",
+                    width: "60%", height: 2, borderRadius: 1,
+                    background: "rgba(255,255,255,0.9)",
+                    boxShadow: "0 0 12px 3px rgba(200,220,255,0.7), 0 0 30px 8px rgba(160,190,255,0.3)",
+                  }} />
                 </motion.div>
               )}
             </Link>
           );
         })}
+
+        <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.08)", margin: "0 4px", flexShrink: 0 }} />
+        <ThemeToggle />
       </div>
     </div>
   );

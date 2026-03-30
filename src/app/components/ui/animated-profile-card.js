@@ -48,7 +48,7 @@ export const IdentityCardBody = forwardRef(
             : "bg-card/95 text-card-foreground",
           className
         )}
-        style={{ padding: "48px 40px", ...(cardCss || {}) }}
+        style={{ padding: "32px 28px", ...(cardCss || {}) }}
         {...rest}
       >
         <CardHeader className="p-0">
@@ -223,11 +223,12 @@ export const RevealCardContainer = forwardRef(
           "--reveal-radius": "50px",
           "--reveal-x": "64px",
           "--reveal-y": "64px",
-          border: "2px solid var(--accent-color)",
-          padding: "12px",
+          border: "1px solid rgba(91,140,255,0.2)",
+          boxShadow: "0 0 18px rgba(91,140,255,0.1)",
+          padding: "8px",
         }}
         className={cn(
-          "relative w-[360px] overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-500",
+          "relative w-[300px] mx-auto overflow-hidden rounded-3xl shadow-lg transition-shadow duration-500",
           className
         )}
         {...rest}

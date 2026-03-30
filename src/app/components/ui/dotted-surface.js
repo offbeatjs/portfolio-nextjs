@@ -73,7 +73,7 @@ export function DottedSurface({ className, ...props }) {
 			size: 8,
 			vertexColors: true,
 			transparent: true,
-			opacity: 0.8,
+			opacity: 0.25,
 			sizeAttenuation: true,
 		});
 

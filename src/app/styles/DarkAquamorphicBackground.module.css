@@ -64,6 +64,13 @@
   min-height: 100vh;
 }
 
+.light_container {
+  position: relative;
+  min-height: 100vh;
+  background: #f5f4f0;
+  overflow: hidden;
+}
+
 /* Use only transform/opacity in animations (GPU accelerated) */
 .wave_layer1,
 .wave_layer2 {
