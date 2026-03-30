@@ -10,7 +10,7 @@ export const metadata = {
   metadataBase: new URL(BASE_URL),
 
   title: {
-    default: "Yash — Full-Stack Developer & Automation Engineer",
+    default: "Yash - Full-Stack Developer & Automation Engineer",
     template: "%s | Yash",
   },
   description:
@@ -35,8 +35,8 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: BASE_URL,
-    siteName: "Yash — Developer",
-    title: "Yash — Full-Stack Developer & Automation Engineer",
+    siteName: "TheYash",
+    title: "Yash - Full-Stack Developer & Automation Engineer",
     description:
       "Full-stack developer specializing in automation systems, APIs, and custom business tools. Available for freelance projects.",
     images: [
@@ -44,7 +44,7 @@ export const metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Yash — Full-Stack Developer & Automation Engineer",
+        alt: "Yash - Full-Stack Developer & Automation Engineer",
       },
     ],
   },
@@ -53,7 +53,7 @@ export const metadata = {
     card: "summary_large_image",
     site: "@not_yash_",
     creator: "@not_yash_",
-    title: "Yash — Full-Stack Developer & Automation Engineer",
+    title: "Yash - Full-Stack Developer & Automation Engineer",
     description:
       "Full-stack developer specializing in automation, APIs, and custom tools.",
     images: ["/og.png"],
